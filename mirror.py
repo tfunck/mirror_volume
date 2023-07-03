@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     args =parser.parse_args()
    
-    if not os.path.exists(args.out_filename) or args.clobber :
+    if not os.path.exists(args.output_filename) or args.clobber :
         img = nib.load(args.input_filename)
 
         if type(args.template_filename) != type(None):
@@ -39,5 +39,5 @@ if __name__ == '__main__':
         x=np.rint((vol2.shape[0])/2).astype(int)
         vol[x+1:,:,:] = vol2[x:-1,:,:]
 
-        nib.Nifti1Image(vol, affine).to_filename(args.out_filename)
+        nib.Nifti1Image(vol, affine).to_filename(args.output_filename)
 
