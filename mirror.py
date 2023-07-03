@@ -11,7 +11,7 @@ from sys import argv
 if __name__ == '__main__':
 
 
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Mirorr a volume.')
     parser.add_argument('--input', '-i', dest='volume_fn', help='Filename of brain volume to mirror.')
     parser.add_argument('--template', '-t', dest='template_fn', default=None, help='Optional filename of brain template to use as reference.')
     parser.add_argument('--output', '-o', dest='out_fn', default=None, help='Output filename.')
