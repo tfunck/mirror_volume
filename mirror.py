@@ -1,29 +1,43 @@
 import numpy as np
 import nibabel as nib
+import argparse
+import os
 from sys import argv
+
+
+
+
 
 if __name__ == '__main__':
 
-    mebrains_fn=argv[1] #'MEBRAINS_T1.nii.gz'
-    seg_fn = argv[2] #'seg_mn_lr/MEBRAINS_segmentation_mn.nii'
-    out_fn = argv[3] #'seg_mn_lr/MEBRAINS_segmentation_mn_fliplr.nii.gz'
 
-    ref_affine = nib.load(mebrains_fn).affine
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('--input', '-i', dest='volume_fn', help='Filename of brain volume to mirror.')
+    parser.add_argument('--template', '-t', dest='template_fn', default=None, help='Optional filename of brain template to use as reference.')
+    parser.add_argument('--output', '-o', dest='out_fn', default=None, help='Output filename.')
+    parser.add_argument('--offset', dest='offset',default=1000, help='Value to add to mirrored region to create unique mirrored ROI.')
+    parser.add_argument('--clobber', dest='clobber',default=False,action='store_true', help='Overwrite existing results')
 
-    img = nib.load(seg_fn)
-    affine = ref_affine
+    args =parser.parse_args()
+   
+    if not os.path.exists(args.out_fn) or args.clobber :
+        img = nib.load(args.volume_fn)
 
-    vol = img.get_fdata()
+        if type(args.template_fn) != type(None):
+            affine = nib.load(args.template_fn).affine
+        else:
+            affine = img.affine
 
-    vol2 = np.flip(vol,axis=0).copy()
+        vol = img.get_fdata()
 
-    min_unique_value = np.unique(vol)[1]
+        vol2 = np.flip(vol,axis=0).copy()
 
-    vol2[vol2 > min_unique_value] = vol2[vol2 > min_unique_value] + 1000
+        min_unique_value = np.unique(vol)[1]
 
-    x=np.rint((vol2.shape[0])/2).astype(int)
-    print(x)
-    vol[x+1:,:,:] = vol2[x:-1,:,:]
+        vol2[vol2 > min_unique_value] = vol2[vol2 > min_unique_value] + args.offset
 
-    nib.Nifti1Image(vol, affine).to_filename(out_fn)
-    #nib.Nifti1Image(vol2, img.affine).to_filename('seg_mn_lr/MEBRAINS_segmentation_mn_fliplr2.nii')
+        x=np.rint((vol2.shape[0])/2).astype(int)
+        vol[x+1:,:,:] = vol2[x:-1,:,:]
+
+        nib.Nifti1Image(vol, affine).to_filename(args.out_fn)
+
