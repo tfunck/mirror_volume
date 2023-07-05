@@ -6,7 +6,7 @@ Mirror a volume through saggital plane through center from right to left
 
 ## Example:
 
-`python3 mirror_volume.py -t MEBRAINS_T1.nii.gz  seg_mn_lr/MEBRAINS_segmentation_mn.nii seg_mn_lr/MEBRAINS_segmentation_mn_sym.nii.gz`
+`python3 mirror.py -t MEBRAINS_T1.nii.gz  seg_mn_lr/MEBRAINS_segmentation_mn.nii seg_mn_lr/MEBRAINS_segmentation_mn_sym.nii.gz`
 
 ## Useage
 
@@ -24,8 +24,13 @@ Mirorr a volume.
 ### Optional arguments:
 
   -h, --help:            show this help message and exit
-  
+
+  --roi-dir ROI_DIR, -r ROI_DIR: Output directory for individual ROI volumes. (Default=roi
+
   --template TEMPLATE_FILENAME, -t TEMPLATE_FILENAME:  Optional filename of brain template to use as reference.
                         
   --offset OFFSET:       Value to add to mirrored region to create unique mirrored ROI.
+
+  --clobber             Overwrite existing results
+
   
